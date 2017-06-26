@@ -3,25 +3,28 @@
     angular.module('circle-completion', [])
         .directive('circleComplete',
             [
-                '$document', function(document) {
+                function() {
                     return {
                         restrict: 'EA',
                         scope: {
                             percentage: '=',
                             color: '=',
                             lineWidth: '=',
-                            text: '='
+                            text: '=',
+                            lineCap: '='
                         },
                         link: function($scope, element, attrs) {
+                            var canvas, ctx, radius, span, options;
 
-                            var canvas, ctx, radius, span;
-
-                            var options = {
-                                percent: $scope.percentage || 100,
-                                color: $scope.color || 'rgba(155, 155, 155, 1)',
-                                size: element.width(),
-                                lineWidth: $scope.lineWidth || 23,
-                                text: $scope.text || 'COMPLETE'
+                            function setOptions() {
+                                options = {
+                                    percent: $scope.percentage || 100,
+                                    color: $scope.color || 'rgba(155, 155, 155, 1)',
+                                    size: element.width(),
+                                    lineWidth: $scope.lineWidth || 50,
+                                    text: $scope.text || 'COMPLETE',
+                                    lineCap: $scope.lineCap || 'butt' //butt, round, square
+                                }
                             }
 
                             $scope.$watch('percentage',
@@ -31,7 +34,8 @@
                                         updatePercentageNumber();
                                         updateCompletionCircle();
                                     }
-                                });
+                                }
+                            );
 
                             function createElement() {
                                 element.css('position', 'relative')
@@ -104,25 +108,30 @@
                                 ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
                                 ctx.restore();
 
-                                drawCircle(options.color, options.lineWidth, 100 / 100, .3);
-                                drawCircle(options.color, options.lineWidth, options.percent / 100, 1);
+                                drawCircle(options.color, options.lineWidth, 100 / 100, .3, 'butt');
+                                drawCircle(options.color, options.lineWidth, options.percent / 100, 1, options.lineCap);
                             }
 
-                            var drawCircle = function(color, lineWidth, percent, opacity) {
+                            var drawCircle = function(color, lineWidth, percent, opacity, lineCap) {
                                 percent = Math.min(Math.max(0, percent || 1), 1);
                                 ctx.beginPath();
                                 ctx.arc(0, 0, radius, 0, Math.PI * 2 * percent, false);
                                 ctx.strokeStyle = color;
                                 ctx.fillStyle = '#4a4a4a';
                                 ctx.fill();
-                                ctx.lineCap = 'butt'; // butt, round or square
+                                ctx.lineCap = lineCap;
                                 ctx.lineWidth = lineWidth;
                                 ctx.globalAlpha = opacity;
                                 ctx.stroke();
                             };
 
-                            createElement();
-                            updateCompletionCircle();
+                            angular.element(element).ready(function() {
+                                setOptions();
+                                createElement();
+                                updateCompletionCircle();
+                            })
+
+                           
                         }
                     }
                 }

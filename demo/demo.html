@@ -1,11 +1,18 @@
 
 <html>
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     <script src="../src/circle-complete.js"></script>
+    <script src="app.js"></script>
 </head>
-<body ng-app="demoApp">
-    test
+<body ng-app="demoApp" ng-controller="demoCtrl">
+    <circle-complete id="demo-circle" percentage="percentComplete" color="'#ababab'" text="'Compl'" line-cap="'round'"></circle-complete>
 </body>
 
 </html>
+<style>
+    #demo-circle {
+        width: 100px;
+    }
+</style>
