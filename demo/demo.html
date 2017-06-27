@@ -7,12 +7,14 @@
     <script src="app.js"></script>
     <style>
         .demo-circle {
-            width: 100px;
+            width: 400px;
         }
     </style>
 </head>
-<body ng-app="demoApp" ng-controller="demoCtrl">
-    <circle-complete class="demo-circle" percentage="percentComplete" color="'#ababab'" text="'Compl'" line-cap="'round'"></circle-complete>
+<body ng-app="demoApp" ng-controller="demoCtrl" style="background-color: aqua">
+    <circle-complete class="demo-circle" percent-options="{value:percentComplete, color:'white'}" line-options="{width: 2, color:'#efefef', cap:'butt'}" text-options="{value:'Complete', color:'#ababab'}" background-color="'#ababab'"></circle-complete>
+    <circle-complete class="demo-circle" percent-options="{value:percentComplete, color:'white'}" line-options="{width: 2, color:'#efefef', cap:'butt'}" text-options="{value:'Complete', color:'#ababab'}" background-color="'transparent'"></circle-complete>
+    <circle-complete class="demo-circle" percent-options="{value:percentComplete, color:'white'}" line-options="{width: 2, color:'#efefef', cap:'butt'}" text-options="{value:'Complete', color:'#ababab'}" background-color="'#ababab'"></circle-complete>
 </body>
 
 </html>

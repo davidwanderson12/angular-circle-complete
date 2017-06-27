@@ -7,29 +7,30 @@
                     return {
                         restrict: 'EA',
                         scope: {
-                            percentage: '=',
-                            color: '=',
-                            lineWidth: '=',
-                            text: '=',
-                            lineCap: '='
+                            lineOptions: '=',
+                            textOptions: '=',
+                            percentOptions: '=',
+                            backgroundColor: '=',
                         },
                         link: function($scope, element, attrs) {
-                            var canvas, ctx, radius, span, options;
+                            var canvas, ctx, radius, textHolder, span, subtext, size;
 
                             function setOptions() {
-                                options = {
-                                    percent: $scope.percentage || 100,
-                                    color: $scope.color || 'rgba(0, 0, 0, 1)',
-                                    lineWidth: $scope.lineWidth || 50,
-                                    text: $scope.text || 'COMPLETE',
-                                    size: element.width(),
-                                    lineCap: $scope.lineCap || 'butt' //butt, round, square
-                                }
+                                $scope.lineOptions.width = $scope.lineOptions.width || 5;
+                                $scope.lineOptions.color = $scope.lineOptions.color || 'white';
+                                $scope.lineOptions.cap = $scope.lineOptions.cap || 'butt';
+
+                                $scope.textOptions.value = $scope.textOptions.value || 'Complete';
+                                $scope.textOptions.color = $scope.textOptions.color || 'white';
+
+                                $scope.percentOptions.value = $scope.percentOptions.value || 100;
+                                $scope.percentOptions.color = $scope.percentOptions.color || 'white';
+
+                                $scope.backgroundColor = $scope.backgroundColor || 'transparent';
                             }
 
-                            $scope.$watch('percentage',
+                            $scope.$watch('percentOptions.value',
                                 function() {
-                                    options.percent = $scope.percentage;
                                     updatePercentageNumber();
                                     updateCompletionCircle();
                                 }, true
@@ -41,7 +42,7 @@
 
                             $scope.$watch($scope.getElementWidth,
                                 function () {
-                                    setOptions();
+                                    size = element.width(),
                                     createElement();
                                     updateCompletionCircle();
                                 }, true
@@ -49,7 +50,7 @@
 
                             function createElement() {
                                 element.css('position', 'relative')
-                                    .css('height', options.size + 'px')
+                                    .css('height', size + 'px')
                                     .css('margin-top', '3px')
                                     .css('margin-left', '3px')
                                     .css('display', 'inline-block');
@@ -59,34 +60,34 @@
                                     .css('position', 'absolute')
                                     .css('top', '0')
                                     .css('left', '0');
-                                canvas[0].width = (options.size);
-                                canvas[0].height = (options.size);
+                                canvas[0].width = (size);
+                                canvas[0].height = (size);
 
-                                var textHolder = angular.element('<div/>')
+                                textHolder = angular.element('<div/>')
                                     .css('position', 'absolute')
-                                    .css('padding-top', options.size * .32 + 'px')
+                                    .css('padding-top', size * .32 + 'px')
                                     .css('font-family', 'Roboto')
                                     .css('font-weight', '100');
 
                                 span = angular.element('<span/>')
-                                    .html(options.percent + '%')
+                                    .html($scope.percentOptions.value + '%')
                                     .css('color', '#f0f0f0')
                                     .css('display', 'block')
-                                    .css('line-height', options.size * .25 + 'px')
+                                    .css('line-height', size * .25 + 'px')
                                     .css('text-align', 'center')
-                                    .css('width', options.size + 'px')
-                                    .css('font-size', options.size * .25 + 'px')
+                                    .css('width', size + 'px')
+                                    .css('font-size', size * .25 + 'px')
                                     .css('font-weight', '100')
                                     .css('margin-left', '5px');
 
-                                var subtext = angular.element('<span/>')
-                                    .html(options.text)
+                                subtext = angular.element('<span/>')
+                                    .html($scope.textOptions.value)
                                     .css('color', '#9b9b9b')
                                     .css('display', 'block')
-                                    .css('line-height', options.size * .1 + 'px')
+                                    .css('line-height', size * .1 + 'px')
                                     .css('text-align', 'center')
-                                    .css('width', options.size + 'px')
-                                    .css('font-size', options.size * .1 + 'px');
+                                    .css('width', size + 'px')
+                                    .css('font-size', size * .1 + 'px');
 
 
                                 if (typeof (G_vmlCanvasManager) !== 'undefined') {
@@ -100,25 +101,30 @@
 
                                 ctx = canvas[0].getContext('2d');
 
-                                ctx.translate(options.size / 2, options.size / 2); // change center
+                                ctx.translate(size / 2, size / 2); // change center
                                 ctx.rotate((-1 / 2) * Math.PI); // rotate -90 deg
-                                radius = Math.max(0,(options.size - options.lineWidth) / 2);
+                                radius = Math.max(0,(size - $scope.lineOptions.width) / 2);
                             }
 
                             function updatePercentageNumber() {
-                                span.html(options.percent + '%');
+                                if (span === undefined) {
+                                    return;
+                                }
+                                span.html($scope.percentOptions.value + '%');
                             }
 
                             function updateCompletionCircle() {
-
+                                if (span === undefined) {
+                                    return;
+                                }
                                 // clear the canvas for redrawing
                                 ctx.save();
                                 ctx.setTransform(1, 0, 0, 1, 0, 0);
                                 ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
                                 ctx.restore();
 
-                                drawCircle(options.color, options.lineWidth, 100 / 100, .3, 'butt');
-                                drawCircle(options.color, options.lineWidth, options.percent / 100, 1, options.lineCap);
+                                drawCircle($scope.lineOptions.color, $scope.lineOptions.width, 100 / 100, .3, 'butt');
+                                drawCircle($scope.lineOptions.color, $scope.lineOptions.width, $scope.percentOptions.value / 100, 1, $scope.lineOptions.cap);
                             }
 
                             var drawCircle = function(color, lineWidth, percent, opacity, lineCap) {
@@ -126,7 +132,7 @@
                                 ctx.beginPath();
                                 ctx.arc(0, 0, radius, 0, Math.PI * 2 * percent, false);
                                 ctx.strokeStyle = color;
-                                ctx.fillStyle = '#4a4a4a';
+                                ctx.fillStyle = $scope.backgroundColor
                                 ctx.fill();
                                 ctx.lineCap = lineCap;
                                 ctx.lineWidth = lineWidth;
