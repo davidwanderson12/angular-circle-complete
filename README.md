@@ -36,19 +36,24 @@ Insert in your html
 set the html Attributes:
 
 ```percentOptions```:
-	```value```: int - value from 0-100
-	```color```: hex, rgb, or css color - color of text displaying percentage
 
-```lineOptions```:
-	```width```: int - width of line displaying percentage
-	```color```: hex, rgb, or css color - color of text displaying percentage
-	```cap```: canvas linecap - butt, round, square
-	```opacity```: int, value from 0-1 - opacity of line path background
 
-```textOptions```:
-	```value```: string - text to display under percentage
-	```color```: hex, rgb, or css color - color of text displaying under percentage
 
-```backgroundColor```: hex, rgb, or css color - color of center circle
 
-```callback```: function - called when ```percentOptions.value``` reaches 100
+
+|Attribute		|SubProperty|Type			|Options					|Default		|Description|
+| ---			| ---		| ---			| ---						| ---			|
+|percentOptions	|value		|int			|0-100						|100			|amount of circle to be filled in. Must be between|
+|				|color		|string			|(hex, rgb, or css color)	|white			|color of text displaying percentage|
+
+|lineOptions	|width		|int			|							|5px			|width of circle displaying percentage|
+|				|color		|string			|(hex, rgb, or css color)	|white			|color of text displaying percentage|
+|				|cap		|canvas linecap	|butt, round, square		|5px			|type of cap that ends the percentage circle.|
+|				|opacity	|int			|0.0-1.0					|0.3			|opacity of line path background|
+
+|textOptions	|value		|string			|							|'Complete'		|amount of circle to be filled in. Must be between|
+|				|color		|string			|(hex, rgb, or css color)	|white			|color of text displaying under percentage text|
+
+|backgroundColor|			|string			|(hex, rgb, or css color)	|'transparent'	|color of center circle|
+
+|callback		|			|function		|							|null			|called when ```percentOptions.value``` reaches 100|
