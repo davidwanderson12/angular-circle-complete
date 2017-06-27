@@ -2,8 +2,8 @@
     'use strict';
     angular.module('circle-completion', [])
         .directive('circleComplete',
-        ['$timeout',
-            function ($timeout) {
+        ['$timeout', '$window',
+            function ($timeout, $window) {
                     return {
                         restrict: 'EA',
                         scope: {
@@ -11,6 +11,7 @@
                             textOptions: '=',
                             percentOptions: '=',
                             backgroundColor: '=',
+                            callback: '&?'
                         },
                         link: function($scope, element, attrs) {
                             var canvas, ctx, radius, textHolder, span, subtext, size;
@@ -19,6 +20,7 @@
                                 $scope.lineOptions.width = $scope.lineOptions.width || 5;
                                 $scope.lineOptions.color = $scope.lineOptions.color || 'white';
                                 $scope.lineOptions.cap = $scope.lineOptions.cap || 'butt';
+                                $scope.lineOptions.opacity = $scope.lineOptions.opacity || 0.3;
 
                                 $scope.textOptions.value = $scope.textOptions.value || 'Complete';
                                 $scope.textOptions.color = $scope.textOptions.color || 'white';
@@ -30,9 +32,15 @@
                             }
 
                             $scope.$watch('percentOptions.value',
-                                function() {
-                                    updatePercentageNumber();
+                                function () {
+                                    element.html('');
+                                    createElement();
                                     updateCompletionCircle();
+                                    if ($scope.percentOptions.value === 100
+                                        && $scope.callback !== undefined)
+                                    {
+                                        $scope.callback();
+                                    }
                                 }, true
                             );
 
@@ -43,6 +51,8 @@
                             $scope.$watch($scope.getElementWidth,
                                 function () {
                                     size = element.width(),
+                                    setOptions();
+                                    element.html('');
                                     createElement();
                                     updateCompletionCircle();
                                 }, true
@@ -55,6 +65,7 @@
                                     .css('margin-left', '3px')
                                     .css('display', 'inline-block');
 
+                                
                                 canvas = angular.element('<canvas/>')
                                     .css('display', 'block')
                                     .css('position', 'absolute')
@@ -71,7 +82,7 @@
 
                                 span = angular.element('<span/>')
                                     .html($scope.percentOptions.value + '%')
-                                    .css('color', '#f0f0f0')
+                                    .css('color', $scope.percentOptions.color)
                                     .css('display', 'block')
                                     .css('line-height', size * .25 + 'px')
                                     .css('text-align', 'center')
@@ -82,7 +93,7 @@
 
                                 subtext = angular.element('<span/>')
                                     .html($scope.textOptions.value)
-                                    .css('color', '#9b9b9b')
+                                    .css('color', $scope.textOptions.color)
                                     .css('display', 'block')
                                     .css('line-height', size * .1 + 'px')
                                     .css('text-align', 'center')
@@ -123,7 +134,7 @@
                                 ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
                                 ctx.restore();
 
-                                drawCircle($scope.lineOptions.color, $scope.lineOptions.width, 100 / 100, .3, 'butt');
+                                drawCircle($scope.lineOptions.color, $scope.lineOptions.width, 100 / 100, $scope.lineOptions.opacity, 'butt');
                                 drawCircle($scope.lineOptions.color, $scope.lineOptions.width, $scope.percentOptions.value / 100, 1, $scope.lineOptions.cap);
                             }
 
@@ -132,7 +143,7 @@
                                 ctx.beginPath();
                                 ctx.arc(0, 0, radius, 0, Math.PI * 2 * percent, false);
                                 ctx.strokeStyle = color;
-                                ctx.fillStyle = $scope.backgroundColor
+                                ctx.fillStyle = $scope.backgroundColor;
                                 ctx.fill();
                                 ctx.lineCap = lineCap;
                                 ctx.lineWidth = lineWidth;

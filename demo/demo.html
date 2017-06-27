@@ -7,14 +7,34 @@
     <script src="app.js"></script>
     <style>
         .demo-circle {
-            width: 400px;
+            width: 30%;
         }
     </style>
 </head>
-<body ng-app="demoApp" ng-controller="demoCtrl" style="background-color: aqua">
-    <circle-complete class="demo-circle" percent-options="{value:percentComplete, color:'white'}" line-options="{width: 2, color:'#efefef', cap:'butt'}" text-options="{value:'Complete', color:'#ababab'}" background-color="'#ababab'"></circle-complete>
-    <circle-complete class="demo-circle" percent-options="{value:percentComplete, color:'white'}" line-options="{width: 2, color:'#efefef', cap:'butt'}" text-options="{value:'Complete', color:'#ababab'}" background-color="'transparent'"></circle-complete>
-    <circle-complete class="demo-circle" percent-options="{value:percentComplete, color:'white'}" line-options="{width: 2, color:'#efefef', cap:'butt'}" text-options="{value:'Complete', color:'#ababab'}" background-color="'#ababab'"></circle-complete>
+<body ng-app="demoApp" ng-controller="demoCtrl" style="background-color: #000000">
+<circle-complete class="demo-circle"
+                 percent-options="{value:percentComplete1, color:'#ababab'}"
+                 line-options="{width: 10, color:'rgb(100,255,100)', cap:'butt', opacity: 0.3}"
+                 text-options="{value:'Complete', color:'white'}"
+                 background-color="'rgb(51,51,200)'"
+                 callback="callBackFunction(message1, message2)">
+</circle-complete>
+
+<circle-complete class="demo-circle"
+                 percent-options="{value:percentComplete2, color:'white'}"
+                 line-options="{width: 10, color:'rgb(0,100,100)', cap:'butt', opacity: 0.3}"
+                 text-options="{value:'Downloaded', color:'rgb(255,100,100)'}"
+                 background-color="'transparent'">
+</circle-complete>
+
+<circle-complete class="demo-circle"
+                 percent-options="{value:percentComplete3, color:'rgb(100,255,100)'}"
+                 line-options="{width: 10, color:'#efefef', cap:'butt', opacity: 0.3}"
+                 text-options="{value:'Uploaded', color:'#eee'}"
+                 background-color="'#ababab'"
+                 callback="callBackFunction2(message2)">
+</circle-complete>
+
 </body>
 
 </html>
