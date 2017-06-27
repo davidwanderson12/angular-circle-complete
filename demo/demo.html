@@ -5,14 +5,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     <script src="../src/circle-complete.js"></script>
     <script src="app.js"></script>
+    <style>
+        .demo-circle {
+            width: 100px;
+        }
+    </style>
 </head>
 <body ng-app="demoApp" ng-controller="demoCtrl">
-    <circle-complete id="demo-circle" percentage="percentComplete" color="'#ababab'" text="'Compl'" line-cap="'round'"></circle-complete>
+    <circle-complete class="demo-circle" percentage="percentComplete" color="'#ababab'" text="'Compl'" line-cap="'round'"></circle-complete>
 </body>
 
 </html>
-<style>
-    #demo-circle {
-        width: 100px;
-    }
-</style>

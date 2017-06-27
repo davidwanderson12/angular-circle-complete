@@ -2,8 +2,8 @@
     'use strict';
     angular.module('circle-completion', [])
         .directive('circleComplete',
-            [
-                function() {
+        ['$timeout',
+            function ($timeout) {
                     return {
                         restrict: 'EA',
                         scope: {
@@ -19,27 +19,36 @@
                             function setOptions() {
                                 options = {
                                     percent: $scope.percentage || 100,
-                                    color: $scope.color || 'rgba(155, 155, 155, 1)',
-                                    size: element.width(),
+                                    color: $scope.color || 'rgba(0, 0, 0, 1)',
                                     lineWidth: $scope.lineWidth || 50,
                                     text: $scope.text || 'COMPLETE',
+                                    size: element.width(),
                                     lineCap: $scope.lineCap || 'butt' //butt, round, square
                                 }
                             }
 
                             $scope.$watch('percentage',
-                                function(newvalue, oldvalue) {
-                                    if (newvalue !== oldvalue) {
-                                        options.percent = newvalue;
-                                        updatePercentageNumber();
-                                        updateCompletionCircle();
-                                    }
-                                }
+                                function() {
+                                    options.percent = $scope.percentage;
+                                    updatePercentageNumber();
+                                    updateCompletionCircle();
+                                }, true
+                            );
+
+                            $scope.getElementWidth = function () {
+                                return element.width();
+                            };
+
+                            $scope.$watch($scope.getElementWidth,
+                                function () {
+                                    setOptions();
+                                    createElement();
+                                    updateCompletionCircle();
+                                }, true
                             );
 
                             function createElement() {
                                 element.css('position', 'relative')
-                                    .css('width', options.size + 'px')
                                     .css('height', options.size + 'px')
                                     .css('margin-top', '3px')
                                     .css('margin-left', '3px')
@@ -93,11 +102,11 @@
 
                                 ctx.translate(options.size / 2, options.size / 2); // change center
                                 ctx.rotate((-1 / 2) * Math.PI); // rotate -90 deg
-                                radius = (options.size - options.lineWidth) / 2;
+                                radius = Math.max(0,(options.size - options.lineWidth) / 2);
                             }
 
                             function updatePercentageNumber() {
-                                span.html(options.percent + '%')
+                                span.html(options.percent + '%');
                             }
 
                             function updateCompletionCircle() {
@@ -124,14 +133,6 @@
                                 ctx.globalAlpha = opacity;
                                 ctx.stroke();
                             };
-
-                            angular.element(element).ready(function() {
-                                setOptions();
-                                createElement();
-                                updateCompletionCircle();
-                            })
-
-                           
                         }
                     }
                 }
