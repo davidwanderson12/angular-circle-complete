@@ -35,12 +35,6 @@ Insert in your html
 
 set the html Attributes:
 
-```percentOptions```:
-
-
-
-
-
 |Attribute		|SubProperty|Type			|Options					|Default		|Description|
 | ---			| ---		| ---			| ---						| ---			|
 |percentOptions	|value		|int			|0-100						|100			|amount of circle to be filled in. Must be between|
