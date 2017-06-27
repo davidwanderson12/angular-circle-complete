@@ -19,7 +19,7 @@
                             function setOptions() {
                                 $scope.lineOptions.width = $scope.lineOptions.width || 5;
                                 $scope.lineOptions.color = $scope.lineOptions.color || 'white';
-                                $scope.lineOptions.cap = $scope.lineOptions.cap || 'butt';
+                                $scope.lineOptions.cap = $scope.lineOptions.cap || 'butt';  //butt, round, square
                                 $scope.lineOptions.opacity = $scope.lineOptions.opacity || 0.3;
 
                                 $scope.textOptions.value = $scope.textOptions.value || 'Complete';
